@@ -7,16 +7,22 @@ import Notification from './components/Notification/Notification';
 
 function App() {
   const [feedbacks, setFeedbacks] = useState(() => {
-    const val = window.localStorage.getItem("saved-feedbacks");
-    const parsedVal = JSON.parse(val) ?? 0;
-    return parsedVal;
+    const savedFeedbacks = window.localStorage.getItem("saved-feedbacks");
+    if (savedFeedbacks !== null) {
+      return JSON.parse(savedFeedbacks);
+    }
+    return {
+      good: 0,
+      neutral: 0,
+      bad: 0
+    };
   }
 );
   const updateFeedback = feedbackType => {
     setFeedbacks({...feedbacks, [feedbackType]: feedbacks[feedbackType] + 1});
   };
   const totalFeedback = feedbacks.good + feedbacks.neutral + feedbacks.bad;
-  const positiveFeedback = Math.round(((feedbacks.good + feedbacks.neutral) / totalFeedback) * 100);
+  const positiveFeedback = Math.round((feedbacks.good / totalFeedback) * 100);
 
  const resetFeedback = () => {
      setFeedbacks({
